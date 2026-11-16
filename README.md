@@ -16,7 +16,7 @@ R script for evaluating DNA barcode marker performance across _Mallotus_ species
 5. Wilcoxon rank-sum tests (inter > intra) per marker.
 6. Overlap analysis: fraction of interspecific values falling inside the intraspecific range, per species and pooled per marker.
 7. Pairwise Wilcoxon tests between markers (intra, inter, and barcode gap), matched on shared sequence pairs / species.
-8. Composite ranking: each marker scores one win per significant pairwise comparison in the correct direction (max 12).
+8. Composite ranking: each marker scores one win per significant pairwise comparison in the correct direction.
 9. Boxplots of distance distributions, barcode gap, and overlap.
 
 # Output
