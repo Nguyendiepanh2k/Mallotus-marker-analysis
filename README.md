@@ -14,15 +14,16 @@ R script for evaluating DNA barcode marker performance across _Mallotus_ species
 4. Run the script end to end.
 
 # What it does
-1. Reads FASTA alignments for five single markers (rbcL, matK, ITS, phyC, ncpGS) and three combined marker sets.
+1. Reads FASTA alignments for five single markers (rbcL, matK, ITS, phyC, ncpGS) and three combined marker sets. With the combined marker sets, the script expects them as pre-concatenated alignments.
 2. Computes raw pairwise P-distances with pairwise deletion.
 3. Splits distances into intraspecific and interspecific values per species.
 4. Summarises each marker: mean, SD, min/max, and barcode gap (mean inter − mean intra).
 5. Wilcoxon rank-sum tests (inter > intra) per marker.
-6. Overlap analysis: fraction of interspecific values falling inside the intraspecific range, per species and pooled per marker.
-7. Pairwise Wilcoxon tests between markers (intra, inter, and barcode gap), matched on shared sequence pairs / species.
-8. Composite ranking: each marker scores one win per significant pairwise comparison in the correct direction.
-9. Boxplots of distance distributions, barcode gap, and overlap.
+6. Overlap analysis: for each species, the fraction of interspecific distances strictly smaller than that species’ maximum intraspecific distance, reported per species and pooled per marker.
+7. Species absent from some markers (here Mnan, missing in phyC and ncpGS) are excluded from the pairwise cross-marker tests. Change exclude_sp and the filter in per_species_common for your own data. They are still included in the per-marker summary and overlap statistics.
+8. Pairwise Wilcoxon tests between markers (intra, inter, and barcode gap), matched on shared sequence pairs/species. Pair distances sharing a sequence are not independent, so p-values from the pair-level Wilcoxon tests are approximate. Use the composite score as a relative ranking.
+10. Composite ranking: each marker scores one win per significant pairwise comparison in the correct direction. A tie (p ≥ 0.05) gives no points to either marker. With 8 marker sets, the maximum score is 7 + 7 + 7 = 21. Ties in the ranking are broken by smaller pooled overlap %, then larger barcode gap.
+11. Boxplots of distance distributions, barcode gap, and overlap.
 
 # Output
 An excel file (barcode_results.xlsx) with nine sheets:
