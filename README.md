@@ -5,7 +5,7 @@ R script for evaluating DNA barcode marker performance across _Mallotus_ species
 # Required R packages
 - R (>= 4.0)
 - Packages: `ape`, `tidyverse`, `writexl`
-Install with: install.packages(c("ape", "tidyverse", "writexl")) 
+- Install with: install.packages(c("ape", "tidyverse", "writexl")) 
 
 # Usage
 1. Place your aligned FASTA files in the working directory.
