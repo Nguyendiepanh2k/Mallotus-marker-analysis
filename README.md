@@ -29,15 +29,21 @@ install.packages(c("ape", "tidyverse", "writexl"))
 11. Boxplots of distance distributions, barcode gap, and overlap.
 
 # Output
-An excel file (barcode_results.xlsx) with nine sheets:
-1. Sheet	Contents
-2. Summary Statistics	Mean/SD/min/max intra & inter, barcode gap
-3. Rank-Sum Inter vs Intra	Wilcoxon test per marker
-4. Overlap by Species	Per species × marker overlap counts
-5. Overlap Summary	Pooled overlap % per marker
-6. Pairwise Intra / Inter / Barcode Gap	Pairwise Wilcoxon results
-7. Ranking	Composite score and final rank
-8. All Distances	Long-format distance values for plotting
+An excel file `barcode_results.xlsx` with nine sheets:
+
+| Sheet | Contents |
+|---|---|
+| Summary Statistics | Mean/SD/min/max intra & inter, barcode gap |
+| Rank-Sum Inter vs Intra | Wilcoxon rank-sum test per marker |
+| Overlap by Species | Per species × marker overlap counts |
+| Overlap Summary | Pooled overlap % per marker |
+| Pairwise Intra | Pairwise Wilcoxon results (smaller intra wins) |
+| Pairwise Inter | Pairwise Wilcoxon results (larger inter wins) |
+| Pairwise Barcode Gap | Pairwise Wilcoxon results (larger gap wins) |
+| Ranking | Composite score and final rank |
+| All Distances | Long-format distance values for plotting |
+
+Plots: `boxplot_distances.svg`, `barcode_gap.svg`, `overlap_pct.svg`.
 
 # Data
 Sequence alignments are not included. The script is written so that FASTA inputs and species labels can be swapped for any dataset with the same structure.
