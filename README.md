@@ -21,7 +21,7 @@ install.packages(c("ape", "tidyverse", "writexl"))
 ### Sample naming convention
 
 - Query samples: the first 4 characters of the sequence name are the species code (e.g. `Mthi01` becomes `Mthi`).
-- Reference sequences: names in the form `Genus_species...` (e.g. `Mthi_ref`) keep their full name as their own label.
+- Reference sequences: names in the form `Genus_species...` (e.g. `Mthi_ref`) are matched against `species_lookup` and merged with the corresponding query species code (`Mthi_ref` becomes `Mthi`). References not listed in `species_lookup` keep their full name as a separate label.
 
 ## What it does
 
