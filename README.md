@@ -25,7 +25,7 @@ install.packages(c("ape", "tidyverse", "writexl"))
 
 ## What it does
 
-1. Reads FASTA alignments for five single markers (_rbcL, matK, ITS, phyC, ncpGS_) and three combined marker sets (_ITS_phyC, matK_phyC, rbcL_matK_ITS_). Combined sets must be pre-concatenated alignments.
+1. Reads FASTA alignments for five single markers (_rbcL, matK, ITS, phyC, ncpGS_) and three combined marker sets (_ITS_phyC, matK_phyC, rbcL_matK_ITS_). Combined sets must be pre-concatenated alignments. Please adjust species_lookup to your own reference names.
 2. Computes raw pairwise p-distances with pairwise deletion.
 3. Splits distances into intraspecific and interspecific values per species.
 4. Summarises each marker: mean, SD, min/max, and barcode gap (mean inter − mean intra).
