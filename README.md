@@ -20,7 +20,7 @@ R script for evaluating DNA barcode marker performance across _Mallotus_ species
 9. Boxplots of distance distributions, barcode gap, and overlap.
 
 # Output
-A CSV (barcode_results.csv) with nine sheets:
+An excel file (barcode_results.xlsx) with nine sheets:
 1. Sheet	Contents
 2. Summary Statistics	Mean/SD/min/max intra & inter, barcode gap
 3. Rank-Sum Inter vs Intra	Wilcoxon test per marker
