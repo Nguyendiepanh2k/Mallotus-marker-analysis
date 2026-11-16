@@ -3,8 +3,8 @@
 R script for evaluating DNA barcode marker performance across _Mallotus_ species (Euphorbiaceae). Computes intra- and interspecific pairwise p-distances, tests for a barcode gap, measures overlap between distance distributions, and ranks single and combined markers by how reliably they separate species.
 
 # Required R packages
-R (>= 4.0)
-Packages: `ape`, `tidyverse`, `writexl`
+- R (>= 4.0)
+- Packages: `ape`, `tidyverse`, `writexl`
 Install with: install.packages(c("ape", "tidyverse", "writexl")) 
 
 # Usage
