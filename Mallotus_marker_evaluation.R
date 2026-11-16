@@ -20,12 +20,12 @@ lapply(seqs, length)
 # Adjust species_lookup to your own reference names.
 
 species_lookup <- c(
-  "Mape_ref"       = "Mape",
-  "Mbar_ref"     = "Mbar",
-  "Mpan_ref"  = "Mpan",
-  "Mpel_ref"     = "Mpel",
+  "Mape_ref" = "Mape",
+  "Mbar_ref" = "Mbar",
+  "Mpan_ref" = "Mpan",
+  "Mpel_ref" = "Mpel",
   "Mphi_ref" = "Mphi",
-  "Mflo_ref"  = "Mflo"
+  "Mflo_ref" = "Mflo"
 )
 
 extract_species <- function(seq_names, lookup) {
@@ -48,33 +48,36 @@ dist_list <- lapply(seqs, function(s) {
 
 marker_names <- names(dist_list)
 
-get_per_species_vals <- function(dist_matrix, species) {
-  mat     <- as.matrix(dist_matrix)
+get_per_species_vals <- function(dist_matrix, species) {  
+  mat     <- as.matrix(dist_matrix)  
+  seq_nms <- rownames(mat)  
   sp_list <- unique(species[species != "OtherSp"])
   
-  setNames(lapply(sp_list, function(sp) {
-    focal_idx <- which(species == sp)
+  setNames(lapply(sp_list, function(sp) {  
+    focal_idx <- which(species == sp)  
     other_idx <- which(species != sp)
     
-    intra_vals <- c()
-    if (length(focal_idx) > 1) {
-      for (i in 1:(length(focal_idx) - 1))
-        for (j in (i + 1):length(focal_idx)) {
-          val <- mat[focal_idx[i], focal_idx[j]]
-          if (!is.na(val)) intra_vals <- c(intra_vals, val)
+    intra_vals <- c()  
+    if (length(focal_idx) > 1)  
+      for (i in 1:(length(focal_idx) - 1))  
+        for (j in (i + 1):length(focal_idx)) {  
+          val <- mat[focal_idx[i], focal_idx[j]]  
+          if (!is.na(val)) intra_vals <- c(intra_vals, val)  
         }
-    }
     
-    inter_vals <- c()
-    for (i in focal_idx)
-      for (j in other_idx) {
-        val <- mat[i, j]
-        if (!is.na(val)) inter_vals <- c(inter_vals, val)
-      }
-    
-    list(intra = intra_vals, inter = inter_vals)
-  }), sp_list)
-}
+    inter_vals <- c(); inter_keys <- character(0)  
+    for (i in focal_idx)  
+      for (j in other_idx) {  
+        val <- mat[i, j]  
+        if (!is.na(val)) {  
+          inter_vals <- c(inter_vals, val)  
+          inter_keys <- c(inter_keys,  
+                          paste(sort(c(seq_nms[i], seq_nms[j])), collapse = "__"))  
+        }  
+      }  
+    list(intra = intra_vals, inter = setNames(inter_vals, inter_keys))  
+  }), sp_list)  
+}  
 
 per_species_vals <- setNames(
   lapply(marker_names, function(m)
@@ -83,7 +86,11 @@ per_species_vals <- setNames(
 )
 
 intra_list <- lapply(per_species_vals, function(pv) unlist(lapply(pv, `[[`, "intra")))
-inter_list <- lapply(per_species_vals, function(pv) unlist(lapply(pv, `[[`, "inter")))
+inter_list <- lapply(per_species_vals, function(pv) {  
+  v <- unlist(lapply(pv, `[[`, "inter"))  
+  v[!duplicated(names(v))]         
+}) 
+stopifnot(all(sapply(inter_list, function(v) !any(duplicated(names(v))))))
 lapply(intra_list, length)
 lapply(inter_list, length)
 
@@ -129,7 +136,7 @@ print(wilcox_intra_inter)
 # (inter values that "fall into" the intra range → bad for discrimination)
 # Marker-level overlap_pct (POOLED):
 # = sum(overlap_count across all species) / sum(total_inter across all species) × 100
-# This is the true fraction of all inter values that overlap, NOT the average of per-species percentages.
+# This is the per-species incidence, NOT the average of per-species percentages.
 
 overlap_by_species <- do.call(rbind, lapply(marker_names, function(marker) {
   pv <- per_species_vals[[marker]]
@@ -329,6 +336,12 @@ per_species_common <- lapply(per_species_summary, function(df) {
 })
 lapply(per_species_common, nrow)
 lapply(per_species_common, function(df) df$species)
+
+mrg <- merge(per_species_common[[m1]][, c("species","barcode_gap")],  
+             per_species_common[[m2]][, c("species","barcode_gap")],  
+             by = "species", suffixes = c(".1", ".2"))  
+x <- mrg$barcode_gap.1; y <- mrg$barcode_gap.2  
+valid <- !is.na(x) & !is.na(y); x <- x[valid]; y <- y[valid]  
 
 pairwise_gap <- do.call(rbind, lapply(1:(length(marker_names) - 1), function(i) {
   do.call(rbind, lapply((i + 1):length(marker_names), function(j) {
