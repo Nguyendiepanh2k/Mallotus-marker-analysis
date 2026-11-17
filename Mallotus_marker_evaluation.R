@@ -317,13 +317,13 @@ per_species_summary <- setNames(
     do.call(rbind, lapply(names(pv), function(sp) {
       intra_v    <- pv[[sp]]$intra
       inter_v    <- pv[[sp]]$inter
-      mean_intra <- ifelse(length(intra_v) > 0, mean(intra_v, na.rm = TRUE), NA)
-      mean_inter <- mean(inter_v, na.rm = TRUE)
+      mean_intra <- if (length(intra_v) > 0 && any(!is.na(intra_v))) mean(intra_v, na.rm = TRUE) else NA_real_
+      mean_inter <- if (length(inter_v) > 0 && any(!is.na(inter_v))) mean(inter_v, na.rm = TRUE) else NA_real_
       data.frame(
         species     = sp,
         mean_intra  = round(mean_intra, 4),
         mean_inter  = round(mean_inter, 4),
-        barcode_gap = round(mean_inter - ifelse(is.na(mean_intra), 0, mean_intra), 4)
+        barcode_gap = round(mean_inter - mean_intra, 4)
       )
     }))
   }),
@@ -344,7 +344,6 @@ pairwise_gap <- do.call(rbind, lapply(1:(length(marker_names) - 1), function(i) 
              per_species_common[[m2]][, c("species","barcode_gap")],  
              by = "species", suffixes = c(".1", ".2"))  
     x <- mrg$barcode_gap.1; y <- mrg$barcode_gap.2  
-    valid <- !is.na(x) & !is.na(y); x <- x[valid]; y <- y[valid] 
     valid <- !is.na(x) & !is.na(y)
     x <- x[valid]; y <- y[valid]
     
