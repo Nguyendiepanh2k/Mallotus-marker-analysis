@@ -30,6 +30,7 @@ species_lookup <- c(
 
 extract_species <- function(seq_names, lookup) {
   sapply(seq_names, function(name) {
+    name <- trimws(name)
     if (grepl("^[A-Z][a-z]+_[a-z]+", name)) {
       if (name %in% names(lookup)) return(lookup[name])
       else return(name)
@@ -134,8 +135,7 @@ print(wilcox_intra_inter)
 # Per species × marker:
 # overlap_count = number of inter values < max(intra)
 # (inter values that "fall into" the intra range → bad for discrimination)
-# Marker-level overlap_pct (POOLED):
-# = sum(overlap_count across all species) / sum(total_inter across all species) × 100
+# Marker-level overlap_pct (POOLED)= sum(overlap_count across all species) / sum(total_inter across all species) × 100
 # This is the per-species incidence, NOT the average of per-species percentages.
 
 overlap_by_species <- do.call(rbind, lapply(marker_names, function(marker) {
@@ -335,19 +335,16 @@ per_species_common <- lapply(per_species_summary, function(df) {
   df[order(df$species), ]
 })
 lapply(per_species_common, nrow)
-lapply(per_species_common, function(df) df$species)
-
-mrg <- merge(per_species_common[[m1]][, c("species","barcode_gap")],  
-             per_species_common[[m2]][, c("species","barcode_gap")],  
-             by = "species", suffixes = c(".1", ".2"))  
-x <- mrg$barcode_gap.1; y <- mrg$barcode_gap.2  
-valid <- !is.na(x) & !is.na(y); x <- x[valid]; y <- y[valid]  
+lapply(per_species_common, function(df) df$species) 
 
 pairwise_gap <- do.call(rbind, lapply(1:(length(marker_names) - 1), function(i) {
   do.call(rbind, lapply((i + 1):length(marker_names), function(j) {
     m1 <- marker_names[i]; m2 <- marker_names[j]
-    x  <- per_species_common[[m1]]$barcode_gap
-    y  <- per_species_common[[m2]]$barcode_gap
+    mrg <- merge(per_species_common[[m1]][, c("species","barcode_gap")],  
+             per_species_common[[m2]][, c("species","barcode_gap")],  
+             by = "species", suffixes = c(".1", ".2"))  
+    x <- mrg$barcode_gap.1; y <- mrg$barcode_gap.2  
+    valid <- !is.na(x) & !is.na(y); x <- x[valid]; y <- y[valid] 
     valid <- !is.na(x) & !is.na(y)
     x <- x[valid]; y <- y[valid]
     
